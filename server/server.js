@@ -9,7 +9,7 @@ var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
 var {Users} = require('./models/Users');
 
-
+const port = process.env.PORT || 3000;
 var app = express();
 
 app.use(bodyParser.json());
@@ -57,9 +57,30 @@ app.get('/todos',(req,res)=> {
     res.status(400).send(e);
 });
 
+app.delete('/todos/:id', (req,res)=>{
+    //get the id
+    var id = req.params.id;
+    if(!ObjectID.isValid(id)){
+        return res.status(404).send();
+    }
+    //vladiate the id -> not valid? return 404
+    Todo.findByIdAndRemove(id).then((todo)=>{
+        if(!todo){
+            return res.status(404).send('the list is empty');
+        }
+        return res.send({todo});
+    }).catch((e)=> res.status(404).send());
+    //remove todo by id
+        //success
+        //if no doc, send 404
+        // if doc, send doc back with 200
+    //error
+     // 400 with empty body
 
-app.listen(3000,()=> {
-    console.log('Started on port 3000');
+});
+
+app.listen(port,()=> {
+    console.log(`Started on port ${port}`);
 });
 
 module.exports = {app};
