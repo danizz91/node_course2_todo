@@ -22,4 +22,4 @@ var User = mongoose.model('Users',{
 //     console.log('Unable to create User',e);
 // });
 
-module.exports = User;
+module.exports = {User};
